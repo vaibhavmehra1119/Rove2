@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "593391244765",
+    "project_id": "rove-4d262",
+    "storage_bucket": "rove-4d262.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:593391244765:android:33f647f9f96c10efae1234",
+        "android_client_info": {
+          "package_name": "com.example.roveapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "593391244765-apsqg60db7t2kenlhua9blr5vlt2caj2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.roveapp",
+            "certificate_hash": "8b8aac0fe224e69cd1412749c54e889d62589b71"
+          }
+        },
+        {
+          "client_id": "593391244765-ug396b31eong5vlsa3tdj890lr8jg6v7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD744gEX4Omt52Cv2yc0YUpQCQAnCbbrRg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "593391244765-ug396b31eong5vlsa3tdj890lr8jg6v7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

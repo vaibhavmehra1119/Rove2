@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Rove App</string>
+    <string name="title_activity_heat_map">Map</string>
+    <string name="title_activity_report_crime">Map</string>
+    <string name="open">1</string>
+    <string name="close">2</string>
+</resources>
