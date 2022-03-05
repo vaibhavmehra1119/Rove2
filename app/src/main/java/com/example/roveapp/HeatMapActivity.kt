@@ -114,10 +114,6 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
 
-        // Initializing Map
-        //val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        //mapFragment.getMapAsync(this)
-
         // Initializing fused location client
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -128,12 +124,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    // Services such as getLastLocation()
-    // will only run once map is ready
-    /*override fun onMapReady(p0: GoogleMap) {
-        mMap = p0
-        getLastLocation()
-    }*/
+
 
     // Get current location
     @SuppressLint("MissingPermission")
@@ -194,9 +185,9 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     // function to check if GPS is on
     private fun isLocationEnabled(): Boolean {
         val locationManager: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) //|| locationManager.isProviderEnabled(
+            //LocationManager.NETWORK_PROVIDER
+        //)
     }
 
     // Check if location permissions are

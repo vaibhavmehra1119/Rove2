@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
             setContentView(videoHolder)
             val video = Uri.parse("android.resource://" + packageName + "/" + R.raw.splashvideo)
             videoHolder.setVideoURI(video)
-
             videoHolder.setOnCompletionListener { jump() }
             videoHolder.start()
         } catch (ex: Exception) {
