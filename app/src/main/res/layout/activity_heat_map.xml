@@ -35,7 +35,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="50dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="30dp"
         android:focusable="true"
         app:srcCompat="@drawable/ic_add" />
 
@@ -62,6 +62,17 @@
             android:layout_marginLeft="120dp"
             android:focusable="true"
             app:srcCompat="@drawable/ic_baseline_bar_chart_24" />-->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/local_police"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="50dp"
+            android:layout_marginRight="120dp"
+            android:focusable="true"
+            app:srcCompat="@drawable/ic_baseline_local_police_24" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/myLocation"
@@ -69,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="30dp"
             android:layout_marginTop="30dp"
             android:clickable="true"
             android:focusable="true"

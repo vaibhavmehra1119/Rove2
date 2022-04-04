@@ -34,6 +34,42 @@
         android:gravity="top"
         android:hint="Add Description"
         android:textColorHint="@color/black" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:hint="Select Specific Crime"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/auto_complete_text"
+            android:inputType="none"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/upload_image"
+        android:layout_marginVertical="30dp"
+        android:scaleType="centerCrop"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/select_image_button"
+        android:layout_marginBottom="32dp"
+        android:text="Select Image"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/upload_image_button"
+        android:layout_marginBottom="32dp"
+        android:text="Upload Image"/>
+
 
     <TextView
         android:id="@+id/textView"
