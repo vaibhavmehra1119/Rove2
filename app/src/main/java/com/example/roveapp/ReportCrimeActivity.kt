@@ -3,7 +3,7 @@ package com.example.roveapp
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.webkit.MimeTypeMap
+import android.provider.MediaStore
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.roveapp.databinding.ActivityReportCrimeBinding
@@ -14,10 +14,14 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.firestore.FirebaseFirestore
-import java.io.File
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 
 
-class ReportCrimeActivity : AppCompatActivity(), OnMapReadyCallback {
+class ReportCrimeActivity : AppCompatActivity(), OnMapReadyCallback, PermissionListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityReportCrimeBinding
@@ -27,8 +31,9 @@ class ReportCrimeActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var rg: RadioButton
     private lateinit var select_image: Button
     private lateinit var upload_image:Button
-    private var SELECT_IMAGE = 1
-    private lateinit var textFile: TextView
+    private lateinit var filepath: Uri
+    private lateinit var img: ImageView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +45,7 @@ class ReportCrimeActivity : AppCompatActivity(), OnMapReadyCallback {
         rb = binding.rg
         select_image=binding.selectImageButton
         upload_image=binding.uploadImageButton
-        textFile=binding.textView
+        img = binding.image
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -55,23 +60,14 @@ class ReportCrimeActivity : AppCompatActivity(), OnMapReadyCallback {
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, languages)
         autotextView.setAdapter(adapter)
         select_image.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "image/*"
-            startActivityForResult(intent, SELECT_IMAGE)
+            intent = Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*")
+            startActivityForResult(Intent.createChooser(intent,"select picture"),1);
+
         }
         upload_image.setOnClickListener {
-            val path = textFile.text.toString()
-            val intent = Intent()
-            intent.action = Intent.ACTION_VIEW
-            val file = File(path)
 
-            val mime = MimeTypeMap.getSingleton()
-            val ext = file.name.substring(file.name.indexOf(".") + 1)
-            val type = mime.getMimeTypeFromExtension(ext)
 
-            intent.setDataAndType(Uri.fromFile(file),type)
-
-            startActivity(intent)
         }
     }
 
@@ -88,17 +84,21 @@ class ReportCrimeActivity : AppCompatActivity(), OnMapReadyCallback {
         }.addOnFailureListener{
             println("ERROR!!!!!")
         }
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            SELECT_IMAGE -> if (resultCode === RESULT_OK) {
-                val FilePath: String = data?.data?.path.toString()
-                textFile.text = FilePath
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.data != null) {
+            val uri = data.data
+            try {
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                img.setImageBitmap(bitmap)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
+
+
     }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -114,5 +114,22 @@ class ReportCrimeActivity : AppCompatActivity(), OnMapReadyCallback {
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
             googleMap.addMarker(markerOptions)
         }
+    }
+    //Dexter Permission
+    override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+
+        val intent: Intent= Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(Intent.createChooser(intent,"Please Select Image"),1)
+    }
+
+    override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
+        //TODO("Not yet implemented")
+        Toast.makeText(applicationContext,"Denied",Toast.LENGTH_LONG).show()
+    }
+
+    override fun onPermissionRationaleShouldBeShown(p0: PermissionRequest?, p1: PermissionToken?) {
+        //TODO("Not yet implemented")
+        p1?.continuePermissionRequest()
     }
 }

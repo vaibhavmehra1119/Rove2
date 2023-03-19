@@ -2,6 +2,7 @@ package com.example.roveapp
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.VoiceInteractor
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -40,7 +41,16 @@ import org.json.JSONArray
 import android.os.Looper
 import androidx.core.app.ActivityCompat
 import android.provider.Settings
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.RequestFuture
+import com.android.volley.toolbox.Volley
+import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.JsonArray
 import java.io.IOException
+import java.lang.reflect.Method
+import java.net.URL
 
 
 class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -52,6 +62,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var marker: Marker
     private lateinit var pieBtn : FloatingActionButton
     private lateinit var barBtn : FloatingActionButton
+    private lateinit var navView: NavigationView
     var currentLocation: LatLng = LatLng(26.8467, 80.9462)
     private val pERMISSION_ID = 42
     lateinit var mFusedLocationClient: FusedLocationProviderClient
@@ -64,6 +75,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
         btn = binding.addButton
         pieBtn = binding.pieButton
         barBtn = binding.barButton
+        navView = binding.navView
 
         barBtn.setOnClickListener{
             startActivity(Intent(this, BarChart::class.java))
@@ -77,13 +89,15 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
 
-        val drawerLayout: DrawerLayout= findViewById(R.id.drawerLayout)
-        val navView:NavigationView=findViewById(R.id.nav_view)
+        val drawerLayout: DrawerLayout= binding.drawerLayout
+
+
         toggle = ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 
 
         navView.setNavigationItemSelectedListener() {
@@ -93,7 +107,12 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 R.id.crime_identify -> startActivity(Intent(this, PieChart::class.java))
                 R.id.crime_list -> Toast.makeText(applicationContext,"Crime List",Toast.LENGTH_SHORT).show()
                 R.id.nav_share -> Toast.makeText(applicationContext,"Clicked Share",Toast.LENGTH_SHORT).show()
-                R.id.nav_logout -> Toast.makeText(applicationContext,"Clicked Logout",Toast.LENGTH_SHORT).show()
+                R.id.nav_logout ->{
+                    FirebaseAuth.getInstance().signOut()
+                    val intent= Intent(this,LoginActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } //Toast.makeText(applicationContext,"Clicked Logout",Toast.LENGTH_SHORT).show()
             }
 
             true
@@ -123,8 +142,6 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
             getLastLocation()
         }
     }
-
-
 
     // Get current location
     @SuppressLint("MissingPermission")
@@ -236,59 +253,68 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
             return null
         }
     }
-    private fun generateHeatMapData(): ArrayList<WeightedLatLng> {
-        val data = ArrayList<WeightedLatLng>()
+    private fun generateHeatMapData() {
 
-        // call our function which gets json data from our asset file
-        val jsonData = getJsonDataFromAsset("jipi8-scuu8.json")
 
-        // ensure null safety with let call
-        jsonData?.let {
-            // loop over each json object
-            for (i in 0 until it.length()) {
-                // parse each json object
-                val entry = it.getJSONObject(i)
-                val lat = entry.getDouble("Latitude")
-                val lon = entry.getDouble("Longitude")
-                val weightedLatLng = WeightedLatLng(LatLng(lat, lon))
-                data.add(weightedLatLng)
-            }
-        }
+        
+        //val requestQueue = Volley.newRequestQueue(this@HeatMapActivity)
+//        val jsonArrayRequest = JsonArrayRequest(Request.Method.GET,"https://rove-app.herokuapp.com",null,Response.Listener {response ->
+//            try {
+//                val data = ArrayList<WeightedLatLng>()
+//
+//                for (i in 0 until response.length()) {
+//                    // parse each json object
+//                    val entry = response.getJSONObject(i)
+//                    val lat = entry.getString("Latitude")
+//                    val lon = entry.getString("Longitude")
+//                    val weightedLatLng = WeightedLatLng(LatLng(lat.toDouble(), lon.toDouble()))
+//                    data.add(weightedLatLng)
+//                }
+//                if(!data.isEmpty()) {
+//                    val heatMapProvider = HeatmapTileProvider.Builder()
+//                        .weightedData(data) // load our weighted data
+//                        // optional, in pixels, can be anything between 20 and 50
+//                        .build()
+//                    mMap.addTileOverlay(TileOverlayOptions().tileProvider(heatMapProvider))
+//                }
+//            }
+//            catch (e:Exception){
+//                e.printStackTrace()
+//            }
+//        },
+//            Response.ErrorListener {error ->
+//
+//            })
+//        requestQueue.add(jsonArrayRequest)
 
-        return data
     }
 
 
-    fun heat(googleMap: GoogleMap){
-        val data = generateHeatMapData()
-        val heatMapProvider = HeatmapTileProvider.Builder()
-            .weightedData(data) // load our weighted data
-            .radius(50) // optional, in pixels, can be anything between 20 and 50
-            .build()
-        googleMap.addTileOverlay(TileOverlayOptions().tileProvider(heatMapProvider))
-    }
+
     override fun onMapReady(googleMap: GoogleMap) {
-
-        val data = generateHeatMapData()
-        val heatMapProvider = HeatmapTileProvider.Builder()
-            .weightedData(data) // load our weighted data
-            .radius(50) // optional, in pixels, can be anything between 20 and 50
-            .build()
-        googleMap.addTileOverlay(TileOverlayOptions().tileProvider(heatMapProvider))
+        mMap=googleMap
+        generateHeatMapData()
         val indiaLatLng = LatLng(26.8467, 80.9462)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(indiaLatLng, 12f))
+        var marker= googleMap.addMarker(MarkerOptions().position(indiaLatLng))
+
         googleMap.setOnMapClickListener { latLng ->
+            if(marker!=null){
+                marker!!.remove()
+            }
+            //marker?.remove()
             val markerOptions = MarkerOptions()
             markerOptions.position(latLng)
             markerOptions.title(latLng.latitude.toString() + " : " + latLng.longitude)
-            googleMap.clear()
-            heat(googleMap)
+            //googleMap.clear()
+
+            //generateHeatMapData()
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
 
 
-            googleMap.addMarker(markerOptions)
+            marker=googleMap.addMarker(markerOptions)
         }
-        mMap=googleMap
+
         getLastLocation()
     }
 }
