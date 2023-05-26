@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "840811886414",
+    "project_id": "roveapp-fd82f",
+    "storage_bucket": "roveapp-fd82f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840811886414:android:868a3498db1beb0aae101f",
+        "android_client_info": {
+          "package_name": "com.example.roveapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "840811886414-1828amrfuc3jr4k7it8v82e8jkll57pn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSeylbE7Kqe908OJiWiHAOknQWNvR75y0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "840811886414-1828amrfuc3jr4k7it8v82e8jkll57pn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
