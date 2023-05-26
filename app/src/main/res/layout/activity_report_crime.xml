@@ -42,9 +42,10 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
         <AutoCompleteTextView
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/auto_complete_text"
+            android:id="@+id/autoText"
             android:inputType="none"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -95,7 +96,7 @@
         android:weightSum="3"
         android:orientation="horizontal">
         <RadioButton
-            android:id="@+id/radioButton"
+            android:id="@+id/radioButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

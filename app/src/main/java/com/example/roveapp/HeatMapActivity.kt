@@ -241,7 +241,6 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
         if (toggle.onOptionsItemSelected(item)) {
             return true
         }
-
         return super.onOptionsItemSelected(item)
     }
     private fun getJsonDataFromAsset(fileName: String): JSONArray? {
@@ -255,41 +254,37 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
     private fun generateHeatMapData() {
 
+        val requestQueue = Volley.newRequestQueue(this@HeatMapActivity)
+        val jsonArrayRequest = JsonArrayRequest(Request.Method.GET,"https://vaibhavmehra1119.github.io/RoveAPI/jipi8-scuu8.json",null,Response.Listener {response ->
+            try {
+                val data = ArrayList<WeightedLatLng>()
 
-        
-        //val requestQueue = Volley.newRequestQueue(this@HeatMapActivity)
-//        val jsonArrayRequest = JsonArrayRequest(Request.Method.GET,"https://rove-app.herokuapp.com",null,Response.Listener {response ->
-//            try {
-//                val data = ArrayList<WeightedLatLng>()
-//
-//                for (i in 0 until response.length()) {
-//                    // parse each json object
-//                    val entry = response.getJSONObject(i)
-//                    val lat = entry.getString("Latitude")
-//                    val lon = entry.getString("Longitude")
-//                    val weightedLatLng = WeightedLatLng(LatLng(lat.toDouble(), lon.toDouble()))
-//                    data.add(weightedLatLng)
-//                }
-//                if(!data.isEmpty()) {
-//                    val heatMapProvider = HeatmapTileProvider.Builder()
-//                        .weightedData(data) // load our weighted data
-//                        // optional, in pixels, can be anything between 20 and 50
-//                        .build()
-//                    mMap.addTileOverlay(TileOverlayOptions().tileProvider(heatMapProvider))
-//                }
-//            }
-//            catch (e:Exception){
-//                e.printStackTrace()
-//            }
-//        },
-//            Response.ErrorListener {error ->
-//
-//            })
-//        requestQueue.add(jsonArrayRequest)
+                for (i in 0 until response.length()) {
+                    // parse each json object
+                    val entry = response.getJSONObject(i)
+                    val lat = entry.getString("Latitude")
+                    val lon = entry.getString("Longitude")
+                    val weightedLatLng = WeightedLatLng(LatLng(lat.toDouble(), lon.toDouble()))
+                    data.add(weightedLatLng)
+                }
+                if(!data.isEmpty()) {
+                    val heatMapProvider = HeatmapTileProvider.Builder()
+                        .weightedData(data) // load our weighted data
+                        // optional, in pixels, can be anything between 20 and 50
+                        .build()
+                    mMap.addTileOverlay(TileOverlayOptions().tileProvider(heatMapProvider))
+                }
+            }
+            catch (e:Exception){
+                e.printStackTrace()
+            }
+        },
+            Response.ErrorListener {error ->
+
+            })
+        requestQueue.add(jsonArrayRequest)
 
     }
-
-
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap=googleMap
@@ -306,15 +301,9 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
             val markerOptions = MarkerOptions()
             markerOptions.position(latLng)
             markerOptions.title(latLng.latitude.toString() + " : " + latLng.longitude)
-            //googleMap.clear()
-
-            //generateHeatMapData()
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
-
-
             marker=googleMap.addMarker(markerOptions)
         }
-
         getLastLocation()
     }
 }

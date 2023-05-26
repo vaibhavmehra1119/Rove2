@@ -41,10 +41,19 @@ tools:context=".LoginActivity">
     android:layout_height="54dp"
     android:layout_gravity="center"
     android:layout_marginTop="25dp"
-    android:layout_marginBottom="64dp"
+    android:layout_marginBottom="20dp"
     android:backgroundTint="@color/white"
     android:enabled="true"
     android:text="SIGN IN"
-    android:textColor="@color/black" />
+    android:textColor="@color/black"
+    />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="58dp"
+        android:layout_gravity="center"
 
+        android:indeterminateTint="@color/black"
+        android:progressTint="@color/black"
+        android:visibility="invisible"/>
 </LinearLayout>
