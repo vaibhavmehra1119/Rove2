@@ -186,7 +186,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
         Looper.myLooper()?.let {
             mFusedLocationClient.requestLocationUpdates(
                 mLocationRequest, mLocationCallback,
-                it
+                Looper.myLooper()!!
             )
         }
     }
@@ -269,7 +269,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 if(!data.isEmpty()) {
                     val heatMapProvider = HeatmapTileProvider.Builder()
-                        .weightedData(data) // load our weighted data
+                        .weightedData(data).radius(50) // load our weighted data
                         // optional, in pixels, can be anything between 20 and 50
                         .build()
                     mMap.addTileOverlay(TileOverlayOptions().tileProvider(heatMapProvider))
