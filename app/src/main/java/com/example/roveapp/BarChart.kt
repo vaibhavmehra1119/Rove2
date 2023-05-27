@@ -11,6 +11,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.LargeValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
+import java.util.*
 
 class BarChart : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

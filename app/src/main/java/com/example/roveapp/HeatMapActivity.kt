@@ -51,7 +51,8 @@ import com.google.gson.JsonArray
 import java.io.IOException
 import java.lang.reflect.Method
 import java.net.URL
-
+import kotlinx.android.synthetic.main.activity_heat_map.*
+import java.util.*
 
 class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
 

@@ -1,6 +1,7 @@
 package com.example.roveapp
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -27,6 +28,10 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.StorageRegistrar
 import java.util.*
 
 
@@ -37,17 +42,17 @@ class ReportCrimeActivity : AppCompatActivity(), OnMapReadyCallback, PermissionL
     private lateinit var btn: Button
     private lateinit var et : EditText
     private lateinit var rg: RadioGroup
-    //private lateinit var rg: RadioButton
     private lateinit var select_image: Button
     private lateinit var upload_image:Button
-    private lateinit var filepath: Uri
+    private lateinit var uri: Uri
     private lateinit var img: ImageView
     private lateinit var autoCompleteTextView: AutoCompleteTextView
-    //private lateinit var crimeType:String
+    private lateinit var latitude:String
+    private lateinit var longitude:String
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityReportCrimeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         btn= binding.button2
@@ -61,6 +66,8 @@ class ReportCrimeActivity : AppCompatActivity(), OnMapReadyCallback, PermissionL
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         var crimeType="57456"
+        latitude=""
+        longitude=""
         autoCompleteTextView.onItemClickListener =
             AdapterView.OnItemClickListener { p0, p1, p2, p3 -> crimeType= p0?.getItemAtPosition(p2).toString() }
         btn.setOnClickListener{
@@ -70,12 +77,13 @@ class ReportCrimeActivity : AppCompatActivity(), OnMapReadyCallback, PermissionL
             val level:String=radioButton.text.toString()
             et.text.clear()
             rg.clearCheck()
+            if(latitude.equals("")|| longitude.equals("")){
+                latitude="26.3045309360496"
+                longitude="80.3495394989439"
+            }
+            saveFireStore(latitude,longitude, crimeType, level,desc)
 
-            saveFireStore("26.654","80.945", crimeType, level,desc)
-            System.out.println(crimeType)
-            System.out.println(level)
         }
-        //var autotextView = findViewById<AutoCompleteTextView>(R.id.autoText)
         val languages = resources.getStringArray(R.array.Languages)
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, languages)
         autoCompleteTextView.setAdapter(adapter)
@@ -86,14 +94,32 @@ class ReportCrimeActivity : AppCompatActivity(), OnMapReadyCallback, PermissionL
 
         }
         upload_image.setOnClickListener {
-
+            val database = FirebaseDatabase.getInstance()
+            val storage=FirebaseStorage.getInstance()
+            val date = Date()
+            val fileName : String = date.toString()
+            val storageReference: StorageReference=storage.getReference("image/"+fileName)
+            progressDialog=ProgressDialog(this)
+            progressDialog.setMessage("Uploading")
+            progressDialog.show()
+            storageReference.putFile(uri).addOnSuccessListener {
+                img.setImageBitmap(null)
+                progressDialog.dismiss()
+                Toast.makeText(this,"Image Uploaded",Toast.LENGTH_LONG).show()
+            }.addOnFailureListener{
+                img.setImageBitmap(null)
+                progressDialog.dismiss()
+                Toast.makeText(this,"Upload Failed",Toast.LENGTH_LONG).show()
+            }
         }
 
     }
 
     private fun saveFireStore( lat: String,  lg:String, et:String, lvl:String,desc:String){
+        progressDialog= ProgressDialog(this)
+        progressDialog.setMessage("Submitting")
+        progressDialog.show()
         val db = FirebaseFirestore.getInstance()
-        // Create a new user with a first and last name
         val Reports:HashMap<String,String> = hashMapOf(
             "Event-Type" to et,
             "Level" to lvl,
@@ -102,23 +128,24 @@ class ReportCrimeActivity : AppCompatActivity(), OnMapReadyCallback, PermissionL
             "Description" to desc
         )
 
-// Add a new document with a generated ID
         db.collection("reports")
             .add(Reports)
             .addOnSuccessListener { documentReference ->
+                progressDialog.dismiss()
                 Toast.makeText(this,"Successfully Saved",Toast.LENGTH_LONG).show()
             }
             .addOnFailureListener { e ->
+                progressDialog.dismiss()
                 Toast.makeText(this,"Failed",Toast.LENGTH_LONG).show()
                 System.out.println(e)
             }
-        
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.data != null) {
-            val uri = data.data
+            uri = data.data!!
             try {
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                 img.setImageBitmap(bitmap)
@@ -127,23 +154,14 @@ class ReportCrimeActivity : AppCompatActivity(), OnMapReadyCallback, PermissionL
             }
         }
     }
-    @SuppressLint("MissingPermission")
-    private fun requestNewLocationData() {
-        val mLocationRequest = LocationRequest()
-        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        mLocationRequest.interval = 0
-        mLocationRequest.fastestInterval = 0
-        mLocationRequest.numUpdates = 1
 
-
-    }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
-
         val lucknow = LatLng(26.8467, 80.9462)
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lucknow,15f))
         googleMap.setOnMapClickListener { latLng -> // Creating a marker
+            latitude=latLng.latitude.toString()
+            longitude=latLng.longitude.toString()
             val markerOptions = MarkerOptions()
             markerOptions.position(latLng)
             markerOptions.title(latLng.latitude.toString() + " : " + latLng.longitude.toString())
