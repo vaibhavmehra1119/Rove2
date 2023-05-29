@@ -7,9 +7,9 @@
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -18,16 +18,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RoveApp">
-        <activity android:name=".BarChart"
-            android:exported="true">
-
-        </activity>
+        <activity android:name=".LoginSignUpActivity"></activity>
+        <activity
+            android:name=".BarChart"
+            android:exported="true"></activity>
         <activity
             android:name=".PieChart"
-            android:exported="true">
-
-
-        </activity>
+            android:exported="true"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -42,15 +39,12 @@
 
         <activity
             android:name=".ReportCrimeActivity"
-            android:label="@string/title_activity_report_crime"
-            android:exported="true">
-        </activity>
+            android:exported="true"
+            android:label="@string/title_activity_report_crime"></activity>
         <activity
             android:name=".HeatMapActivity"
             android:exported="true"
-            android:label="@string/title_activity_heat_map">
-
-        </activity>
+            android:label="@string/title_activity_heat_map"></activity>
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".MainActivity"
@@ -60,7 +54,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
     </application>
 

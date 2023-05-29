@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     private fun jump() {
         if (isFinishing)
             return
-        val intent = Intent(this, LoginActivity::class.java)
+        val intent = Intent(this, LoginSignUpActivity::class.java)
         startActivity(intent)
 
         finish()

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="110dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/ic_baseline_local_police_24" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:backgroundTintMode="screen"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp"
+        android:text="POLICE"
+        android:inputType="textEmailAddress" />
+
+    <Button
+        android:id="@+id/logIn"
+        android:layout_width="153dp"
+        android:layout_height="54dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/white"
+        android:enabled="true"
+        android:text="LOG IN"
+        android:textColor="@color/black"
+        />
+
+    <Button
+        android:id="@+id/signup"
+        android:layout_width="153dp"
+        android:layout_height="54dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/white"
+        android:enabled="true"
+        android:text="SIGN up"
+        android:textColor="@color/black"
+        />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="58dp"
+        android:layout_gravity="center"
+
+        android:indeterminateTint="@color/black"
+        android:progressTint="@color/black"
+        android:visibility="invisible"/>
+</LinearLayout>
